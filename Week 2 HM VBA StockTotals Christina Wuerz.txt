@@ -1,0 +1,86 @@
+Sub stocktotals()
+
+Dim CurrentVol, NextVolume As Long
+Dim TotalVol, CountTicker As Long
+Dim CurrentTicker, NextTicker As String
+Dim ws As Worksheet
+Dim wsname As String
+Dim LastRow, ResultRow As Long
+Dim hldtickername As String
+
+
+'initialize relevant variables
+
+CountTicker = 0
+
+
+'loop to go thru each worksheet
+
+
+For Each ws In Worksheets
+    wsname = ws.Name
+    LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+    MsgBox ("worksheet " + wsname)
+    
+    TotalVol = 0
+    CountTicker = 0
+    ResultRow = 2
+    
+    'Populate titles for I and J.
+    ws.Range("I1").Value = "Ticker"
+    ws.Range("J1").Value = "Total Volume"
+    
+    
+    For i = 2 To LastRow
+       'keep count total rows
+       CountTicker = CountTicker + 1
+       
+       'assign values of ticker and total stock trades from cell values to variables.
+       CurrentTicker = ws.Cells(i, 1).Value
+       CurrentVol = ws.Cells(i, 7).Value
+       NextTicker = ws.Cells(i + 1, 1).Value
+       NextVolume = ws.Cells(i + 1, 7).Value
+       
+       If i = 2 Then
+           hldtickername = ws.Range("A2").Value
+       End If
+       
+       If CurrentTicker = NextTicker Then
+           TotalVol = TotalVol + CurrentVol
+           
+       Else
+            'MsgBox (hldstockname)
+            
+            ' Print the ticker name  in the Result Table.
+            ws.Range("I" & ResultRow).Value = hldtickername
+            
+            'Add value of the last cell in that ticker to the stocktotal
+            TotalVol = TotalVol + CurrentVol
+
+            ' Print the Total stock value into the Result Table.
+            ws.Range("J" & ResultRow).Value = TotalVol
+            
+            'reset relevant values for next ticker.
+            TotalVol = 0
+            hldtickername = NextTicker
+            ResultRow = ResultRow + 1
+            
+                    
+        End If
+       
+       
+    Next i
+    
+    'MsgBox ("CountTicker" + Str(CountTicker))
+    
+Next ws
+    
+
+    'loop thru all the rows to calculate totals for each ticker
+
+
+
+End Sub
+
+
+		
